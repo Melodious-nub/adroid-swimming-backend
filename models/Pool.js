@@ -12,7 +12,7 @@ const poolSchema = new mongoose.Schema({
     required: [true, 'Phone number is required'],
     validate: {
       validator: function(v) {
-        return /^\d{10,15}$/.test(v.toString());
+        return /^\d{9,15}$/.test(v.toString());
       },
       message: 'Please enter a valid phone number'
     }
@@ -40,7 +40,7 @@ const poolSchema = new mongoose.Schema({
     required: [true, 'Zip code is required'],
     validate: {
       validator: function(v) {
-        return /^\d{5,10}$/.test(v.toString());
+        return /^\d{3,10}$/.test(v.toString());
       },
       message: 'Please enter a valid zip code'
     }
