@@ -208,6 +208,6 @@ This project is licensed under the MIT License.
 ## 📞 Support
 
 For support and questions:
-- Email: support@adroidswimming.com
+- Email: shawon.taluckder2@gmail.com
 - Documentation: http://localhost:3000/api-docs
 - Health Check: http://localhost:3000/health
