@@ -6,10 +6,11 @@ const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 // Import database connection
-const connectDB = require('./config/database');
+const { connectDB } = require('./config/database');
 
 // Import routes
 const poolRoutes = require('./routes/pools');
+const authRoutes = require('./routes/auth');
 
 // Import error handler
 const errorHandler = require('./middleware/errorHandler');
@@ -29,9 +30,17 @@ app.use(helmet());
 // CORS configuration - allow all origins
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+app.options('*', cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 
 // Rate limiting
 const limiter = rateLimit({
@@ -65,6 +74,9 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
+app.use('/api/auth', authRoutes);
+// Convenience alias so /api/login also works
+app.use('/api', authRoutes);
 app.use('/api/pools', poolRoutes);
 
 // Root endpoint

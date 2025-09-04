@@ -8,14 +8,16 @@ const {
   deletePool,
   searchPools
 } = require('../controllers/poolController');
-
+const { protect } = require('../middleware/auth');
 /**
  * @swagger
  * /api/pools:
  *   get:
  *     summary: Get all pools
- *     description: Retrieve a list of all swimming pools
+ *     description: Retrieve a list of all swimming pools (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of pools retrieved successfully
@@ -34,6 +36,12 @@ const {
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Pool'
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Server error
  *         content:
@@ -41,15 +49,17 @@ const {
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/', getPools);
+router.get('/', protect, getPools);
 
 /**
  * @swagger
  * /api/pools/search:
  *   get:
  *     summary: Search pools
- *     description: Search pools by home owner name or city
+ *     description: Search pools by home owner name or city (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: q
@@ -81,6 +91,12 @@ router.get('/', getPools);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Server error
  *         content:
@@ -88,21 +104,23 @@ router.get('/', getPools);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/search', searchPools);
+router.get('/search', protect, searchPools);
 
 /**
  * @swagger
  * /api/pools/{id}:
  *   get:
  *     summary: Get a single pool
- *     description: Retrieve a specific pool by ID
+ *     description: Retrieve a specific pool by ID (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: Pool ID
  *     responses:
  *       200:
@@ -117,6 +135,12 @@ router.get('/search', searchPools);
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Pool'
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       404:
  *         description: Pool not found
  *         content:
@@ -130,15 +154,17 @@ router.get('/search', searchPools);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:id', getPool);
+router.get('/:id', protect, getPool);
 
 /**
  * @swagger
  * /api/pools:
  *   post:
  *     summary: Create a new pool
- *     description: Add a new swimming pool record with all 28 fields (13 required + 15 optional equipment fields)
+ *     description: Add a new swimming pool record with all 28 fields (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -189,8 +215,8 @@ router.get('/:id', getPool);
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Pool'
- *       400:
- *         description: Validation error
+ *       401:
+ *         description: Not authorized
  *         content:
  *           application/json:
  *             schema:
@@ -202,21 +228,23 @@ router.get('/:id', getPool);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/', createPool);
+router.post('/', protect, createPool);
 
 /**
  * @swagger
  * /api/pools/{id}:
  *   put:
  *     summary: Update a pool
- *     description: Update an existing swimming pool record with all 28 fields (13 required + 15 optional equipment fields)
+ *     description: Update an existing swimming pool record with all 28 fields (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: Pool ID
  *     requestBody:
  *       required: true
@@ -268,8 +296,8 @@ router.post('/', createPool);
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Pool'
- *       400:
- *         description: Validation error
+ *       401:
+ *         description: Not authorized
  *         content:
  *           application/json:
  *             schema:
@@ -287,21 +315,23 @@ router.post('/', createPool);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:id', updatePool);
+router.put('/:id', protect, updatePool);
 
 /**
  * @swagger
  * /api/pools/{id}:
  *   delete:
  *     summary: Delete a pool
- *     description: Remove a swimming pool record
+ *     description: Remove a swimming pool record (requires authentication)
  *     tags: [Pools]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: Pool ID
  *     responses:
  *       200:
@@ -317,6 +347,12 @@ router.put('/:id', updatePool);
  *                 message:
  *                   type: string
  *                   example: "Pool deleted successfully"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       404:
  *         description: Pool not found
  *         content:
@@ -330,6 +366,6 @@ router.put('/:id', updatePool);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:id', deletePool);
+router.delete('/:id', protect, deletePool);
 
 module.exports = router;

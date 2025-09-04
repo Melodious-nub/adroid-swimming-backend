@@ -1,6 +1,6 @@
 # Adroid Swimming Pool Management API
 
-A comprehensive REST API for managing swimming pool information and equipment details built with Express.js and MongoDB.
+A comprehensive REST API for managing swimming pool information and equipment details built with Express.js and MySQL.
 
 ## 🚀 Features
 
@@ -14,7 +14,7 @@ A comprehensive REST API for managing swimming pool information and equipment de
 ## 📋 Prerequisites
 
 - Node.js (v14 or higher)
-- MongoDB Atlas account (or local MongoDB)
+- MySQL database (cPanel MySQL or local MySQL)
 - npm or yarn package manager
 
 ## 🛠️ Installation
@@ -33,7 +33,11 @@ A comprehensive REST API for managing swimming pool information and equipment de
 3. **Environment Setup**
    Create a `.env` file in the root directory:
    ```env
-   MONGO_URI=mongodb+srv://shawontaluckder1:4R00XPajU8lqlnOo@cluster0.oww9gdb.mongodb.net/adroidSwimming?retryWrites=true&w=majority
+   DB_HOST=localhost
+   DB_USER=cpanel_user
+   DB_PASSWORD=your_password
+   DB_NAME=adroid_swimming
+   JWT_SECRET=supersecret_jwt_key_change_me
    PORT=3000
    NODE_ENV=development
    ```
@@ -82,7 +86,15 @@ The API manages swimming pool records with the following properties:
 
 ## 🔌 API Endpoints
 
-### Pools
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login and receive JWT (3 days) |
+| GET | `/api/auth/me` | Get current user (requires Bearer token) |
+
+### Pools (all require Bearer token)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -95,10 +107,34 @@ The API manages swimming pool records with the following properties:
 
 ## 📝 Usage Examples
 
+### Register and Login
+```bash
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "fullName": "John Doe"
+  }'
+```
+
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "password123"
+  }'
+```
+
+Use the `token` from login responses in the `Authorization: Bearer <token>` header.
+
 ### Create a New Pool
 ```bash
 curl -X POST http://localhost:3000/api/pools \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
   -d '{
     "homeOwnerName": "John Doe",
     "phone": 1234567890,
@@ -121,12 +157,12 @@ curl -X POST http://localhost:3000/api/pools \
 
 ### Get All Pools
 ```bash
-curl http://localhost:3000/api/pools
+curl -H "Authorization: Bearer <token>" http://localhost:3000/api/pools
 ```
 
 ### Search Pools
 ```bash
-curl "http://localhost:3000/api/pools/search?q=John"
+curl -H "Authorization: Bearer <token>" "http://localhost:3000/api/pools/search?q=John"
 ```
 
 ### Update a Pool

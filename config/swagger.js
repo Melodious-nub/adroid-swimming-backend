@@ -27,7 +27,27 @@ const options = {
       }
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Enter your JWT token in the format: Bearer <token>'
+        }
+      },
       schemas: {
+        User: {
+          type: 'object',
+          required: ['username', 'email', 'password', 'fullName'],
+          properties: {
+            id: { type: 'number', example: 1 },
+            username: { type: 'string', example: 'john_doe' },
+            email: { type: 'string', example: 'john@example.com' },
+            fullName: { type: 'string', example: 'John Doe' },
+            role: { type: 'string', example: 'user' },
+            createdAt: { type: 'string', format: 'date-time' }
+          }
+        },
         Pool: {
           type: 'object',
           required: [
