@@ -11,6 +11,7 @@ const { connectDB } = require('./config/database');
 // Import routes
 const poolRoutes = require('./routes/pools');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
 
 // Import error handler
 const errorHandler = require('./middleware/errorHandler');
@@ -78,6 +79,7 @@ app.use('/api/auth', authRoutes);
 // Convenience alias so /api/login also works
 app.use('/api', authRoutes);
 app.use('/api/pools', poolRoutes);
+app.use('/api/users', userRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

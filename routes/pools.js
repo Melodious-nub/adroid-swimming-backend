@@ -8,7 +8,7 @@ const {
   deletePool,
   searchPools
 } = require('../controllers/poolController');
-const { protect } = require('../middleware/auth');
+const { protect, authorizeRoles } = require('../middleware/auth');
 /**
  * @swagger
  * /api/pools:
@@ -315,7 +315,7 @@ router.post('/', protect, createPool);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:id', protect, updatePool);
+router.put('/:id', protect, authorizeRoles('admin'), updatePool);
 
 /**
  * @swagger
@@ -366,6 +366,6 @@ router.put('/:id', protect, updatePool);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:id', protect, deletePool);
+router.delete('/:id', protect, authorizeRoles('admin'), deletePool);
 
 module.exports = router;

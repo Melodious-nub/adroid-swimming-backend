@@ -22,7 +22,7 @@ const options = {
         description: 'Development server'
       },
       {
-        url: 'https://adroid-swimming-backend.onrender.com',
+        url: 'https://data.bdswimmingpool.com',
         description: 'Development server'
       }
     ],

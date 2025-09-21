@@ -19,7 +19,8 @@ const register = async (req, res) => {
     const existsByUsername = await User.findByUsername(username);
     if (existsByUsername) return res.status(400).json({ success: false, message: 'Username already taken' });
 
-    const user = await User.create({ username, email, password, fullName });
+    // All registered users are admins by default per requirements
+    const user = await User.create({ username, email, password, fullName, role: 'admin' });
 
     return res.status(201).json({
       success: true,
